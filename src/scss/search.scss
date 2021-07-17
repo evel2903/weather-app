@@ -1,0 +1,20 @@
+@import "responsive";
+.form__location {
+    margin: 1rem;
+
+    input {
+        width: 60vh;
+        @include tablet() {
+            width: 70vw;
+        }
+        @include phone() {
+            width: 90vw;
+        }
+        font-size: 1rem;
+        padding: 0.5rem;
+        outline: none;
+        border: 2px solid #fff;
+
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2), -2px -2px 4px rgba(0, 0, 0, 0.1);
+    }
+}

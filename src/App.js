@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+
+import './scss/App.scss';
+import Search from './components/Search';
+import Weather from './components/Weather';
+import { useEffect, useState } from 'react';
+import WeatherApi from './api/weatherApi';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [weatherList, setWeatherList] = useState({})
+    const [query, setQuery] = useState('')
+
+    useEffect(() => {
+        const fetchWeatherList = async () => {
+            try {
+                const params = {
+                    q: query,
+                    mode: 'json',
+                    appid: process.env.REACT_APP_API_KEY
+                }
+                const response = await WeatherApi.call5day3hour(params)
+                formatWeatherList(response)
+
+            } catch (error) {
+                setWeatherList({})
+                console.log(error);
+            }
+        }
+        fetchWeatherList()
+    }, [query])
+
+    const formatWeatherList = (weatherList) => {
+        const format = {
+            city_name: `${weatherList.city.name}, ${weatherList.city.country}`,
+            list: weatherList.list.slice(0, 6)
+        }
+        setWeatherList(format)
+    }
+
+    const handleSubmit = (query_string) => {
+        setQuery(query_string)
+    }
+    return (
+        <div className="container">
+            <Search onSubmit={handleSubmit} />
+            <Weather weatherList={weatherList} />
+        </div>
+    );
 }
 
 export default App;
